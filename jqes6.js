@@ -208,14 +208,13 @@
     }
     Collection.prototype.prop = Collection.prototype.attr;
 
-    function select(selector, parent) {
+    function select(selector, context = document) {
         let selection;
-        let parentNode = document;
 
-        if (typeof(parent) === 'string') {
-            return select(parent).find(selector);
-        } else if (parent && parent.tagName) {
-            parentNode = parent;
+        if (typeof(context) === 'string') {
+            return select(context).find(selector);
+        } else if (!context.querySelectorAll) {
+            context = document;
         }
 
         if (typeof(selector) === 'string') {
@@ -226,7 +225,7 @@
                 temp = null;
             } else {
                 try {
-                    selection = [...parentNode.querySelectorAll(selector)];
+                    selection = [...context.querySelectorAll(selector)];
                 } catch (err) {
                     selection = [];
                 }
