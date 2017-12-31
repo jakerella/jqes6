@@ -204,7 +204,9 @@
         }
 
         attr(prop, value) {
-            if (typeof(prop) === 'string' && value) {
+            if (typeof(prop) === 'string' && value === undefined) {
+                return this[0] && this[0].getAttribute(prop);
+            } else if (typeof(prop) === 'string' && value) {
                 this.forEach((node) => node.setAttribute(prop, value.toString()));
             } else if (typeof(prop) === 'string' && !value && value !== 0) {
                 this.forEach((node) => node.removeAttribute(prop));
