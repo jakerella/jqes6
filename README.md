@@ -7,6 +7,20 @@ This is a lightweight (Under 10KB unminified) version of some of the core functi
 
 **This library DOES NOT support all of jQuery.** However, a lot of the most common methods are in here for traversing and manipulating HTML nodes. Note that all functions support chaining where appropriate (for example, `.html()` with no arguments returns the innerHTML of the selected nodes, not the collection of nodes). All manipulation functionality can be performed on a collection of nodes, no need to loop over them just like in jQuery (for example, `$('p').hide()` will hide all paragraphs). Lastly, note that this library uses a custom ES6 class (`Collection`) which extends the built-in JS `Array`. As such, this library does not implement the jQuery `each()` method because you can just use `.forEach()` (or `.map()` or `.filter()`, etc).
 
+### Basic Usage
+
+```javascript
+$('[href^="https"]').addClass('secure');
+
+$('.modal').show();
+
+$('article')
+    .addClass('reading')
+    .append('<aside>Like this article? Share it!</aside>')
+    .find('a.share')
+        .addClass('highlight');
+```
+
 ### API
 
 These are the supported methods. Instead of re-documenting jQuery, I simply link to the jQuery API docs. However, I will note where there are significant differences. That said, you should understand that _this is not jQuery_, so there will always be differences, but mostly minor. One big difference, however, is that all methods (where appropriate) return a `Collection` (a subclass of `Array`) and not the jQuery object. You may want to check out the full [jQuery API documentation](https://api.jquery.com) for more extensive explanations!
