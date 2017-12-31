@@ -95,17 +95,25 @@
         }
 
         addClass(cls) {
-            this.forEach((node) => node.classList.add(cls.toString()));
-            return this;
+            return this.toggleClass(cls, true);
         }
         removeClass(cls) {
-            this.forEach((node) => node.classList.remove(cls.toString()));
-            return this;
+            return this.toggleClass(cls, false);
         }
-        toggleClass(cls) {
+        toggleClass(cls, state) {
+            let names = cls.split(/\s/);
             this.forEach((node) => {
-                cls = cls.toString();
-                (node.classList.contains(cls)) ? node.classList.remove(cls) : node.classList.add(cls);
+                names.forEach((name) => {
+                    if (state === true) {
+                        node.classList.add(name);
+                    } else if (state === false) {
+                        node.classList.remove(name);
+                    } else if (node.classList.contains(name)) {
+                        node.classList.remove(name);
+                    } else {
+                        node.classList.add(name);
+                    }
+                });
             });
             return this;
         }
