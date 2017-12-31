@@ -1,50 +1,15 @@
 /**************************************************************************
  * jqes6
  *
- * This is a lightweight (Under 10KB unminified) version of some of
- * the core functionality in jQuery rewritten in ES5/6. This is not meant
- * to replace anyone's libraries, but merely an experiment in what can be
- * achieved in modern browsers without the use of libraries. This code will
+ * This is a lightweight version of some of the core functionality in jQuery
+ * rewritten in ES5/6. This is not meant to replace jQuery, just an experiment
+ * in what can be achieved in modern browsers without a library. This code will
  * not, for example, work in IE11. If you wanted to use it there then you
  * could precompile this using Babel, etc.
  *
  * Author: Jordan Kasper
  * LICENSE: MIT (https://opensource.org/licenses/MIT)
  *
- * Documentation:
- * Note that all functions support chaining where appropriate and all
- * functionality can be performed on a collection of nodes, no need to
- * loop over them.
- *
-   $            The main selector function, supports string selectors,
-                existing nodes, second argument with a custom root, and
-                will also create detached elements if given raw HTML
-   find         Just like $, but for chaining
-   hide         Hides an element (display none)
-   show         Unhides an element (default display type for that tagName)
-   toggle       Either hide or show, depending on current state
-   addClass     Add the given className
-   removeClass  Remove the given className
-   toggleClass  Add or remove the className depending on current classList
-   on           Add an event listener, including event delegation
-   off          Remove an event listener (not very smartly done)
-   html         Change the HTML inside a node, supports both strings and
-                using the innerHTML of an existing node
-   text         Chnage the text inside a node, supports both strings and
-                using the innerText of an existing node
-   append       Add the given selector/node/raw HTML to the end of each node
-                in the currently selected set of nodes
-   appendTo     Add the selected node(s) to the end of the given node(s);
-                essentially the reverse of append()
-   prepend      Add the given selector/node/raw HTML to the beginning of
-                each node in the currently selected set of nodes
-   prependTo    Add the selected node(s) to the end of the given node(s);
-                essentially the reverse of prepend()
-   attr / prop  Change the value of an attribute on the selected node(s);
-                if no value is given (the second arg), then the given
-                attribute is removed from the node's HTML tag. Note that this
-                also supports passing in an object (hash) of properties/values
-                (These are just aliases of eachother)
  **************************************************************************/
 
 (function() {
