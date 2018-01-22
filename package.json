@@ -1,0 +1,23 @@
+{
+  "name": "jqes6",
+  "version": "0.2.0",
+  "description": "A lightweight version of some of the core functionality provided by jQuery rewritten in pure ES5/6.",
+  "main": "jqes6.js",
+  "scripts": {
+    "test": "node qunit-puppeteer"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/jakerella/jqes6.git"
+  },
+  "author": "Jordan Kasper",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/jakerella/jqes6/issues"
+  },
+  "homepage": "https://github.com/jakerella/jqes6#readme",
+  "dependencies": {
+    "puppeteer": "^1.0.0",
+    "qunit": "^2.5.0"
+  }
+}
