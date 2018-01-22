@@ -128,7 +128,6 @@ const spawn = require('child_process').spawn;
     await page.goto(targetURL);
 
     await page.evaluate(() => {
-      QUnit.config.autostart = false;
       QUnit.config.testTimeout = 5000;
 
       // Cannot pass the window.harness_blah methods directly, because they are
@@ -139,7 +138,13 @@ const spawn = require('child_process').spawn;
       QUnit.log((context) => { window.harness_log(context); });
       QUnit.done((context) => { window.harness_done(context); });
 
-      QUnit.start();
+      if (Object.keys(QUnit.urlParams).length) {
+        console.log("\nRunning with params: " + JSON.stringify(QUnit.urlParams) + "\n");
+      }
+
+      if (!QUnit.config.autostart) {
+        QUnit.start();
+      }
     });
 
     function wait(ms) {
@@ -148,7 +153,7 @@ const spawn = require('child_process').spawn;
 
     await wait(timeout);
 
-    console.error(`Tests timed out after ${timeout}ms`);
+    console.error(`\x1b[33mTests timed out after ${timeout}ms\x1b[0m`);
     browser.close();
     proc.kill('SIGINT');
     process.exit(124);
