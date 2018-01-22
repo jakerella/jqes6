@@ -27,7 +27,7 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
  */
 
-const targetURL = 'http://127.0.0.1:3000/test/index.html';
+const targetURL = `http://127.0.0.1:3000/test/index.html`;
 const timeout = 30000;
 
 const puppeteer = require('puppeteer');
@@ -37,7 +37,7 @@ const spawn = require('child_process').spawn;
   let proc;
 
   try {
-    proc = spawn('http-server');
+    proc = spawn('http-server', ['-c-1']);  // disable caching
 
     const browser = await puppeteer.launch();
     const page = await browser.newPage();
@@ -49,33 +49,45 @@ const spawn = require('child_process').spawn;
       }
     });
 
-    var moduleErrors = [];
-    var testErrors = [];
-    var assertionErrors = [];
+    let moduleErrors = [];
+    let testErrors = [];
+    let assertionErrors = [];
+
+    await page.exposeFunction('harness_moduleStart', context => {
+      const skippedTests = context.tests.filter(t => t.skip).length;
+      if (skippedTests === context.tests.length) {
+        console.log(`\x1b[4m\x1b[36mSkipping Module: ${context.name}\x1b[0m`);
+      } else {
+        console.log(`\x1b[4mRunning Module: ${context.name}\x1b[0m`);
+      }
+    });
 
     await page.exposeFunction('harness_moduleDone', context => {
       if (context.failed) {
-        var msg = "Module Failed: " + context.name + "\n" + testErrors.join("\n");
+        const msg = "Module Failed: " + context.name + "\n" + testErrors.join("\n");
         moduleErrors.push(msg);
         testErrors = [];
       }
+      process.stdout.write('\n');
     });
 
     await page.exposeFunction('harness_testDone', context => {
       if (context.failed) {
-        var msg = "  Test Failed: " + context.name + assertionErrors.join("    ");
+        const msg = "  Test Failed: " + context.name + assertionErrors.join("    ");
         testErrors.push(msg);
         assertionErrors = [];
-        process.stdout.write("F");
+        process.stdout.write("\x1b[31mF\x1b[0m");
+      } else if (context.skipped) {
+        process.stdout.write(`\x1b[36m.\x1b[0m`);
       } else {
-        process.stdout.write(".");
+        process.stdout.write("\x1b[37m.\x1b[0m");
       }
     });
 
     await page.exposeFunction('harness_log', context => {
       if (context.result) { return; } // If success don't log
 
-      var msg = "\n    Assertion Failed:";
+      let msg = "\n    Assertion Failed:";
       if (context.message) {
         msg += " " + context.message;
       }
@@ -88,15 +100,15 @@ const spawn = require('child_process').spawn;
     });
 
     await page.exposeFunction('harness_done', context => {
-      console.log("\n");
+      process.stdout.write("\n");
 
       if (moduleErrors.length > 0) {
-        for (var idx=0; idx<moduleErrors.length; idx++) {
+        for (let idx=0; idx<moduleErrors.length; idx++) {
           console.error(moduleErrors[idx]+"\n");
         }
       }
 
-      var stats = [
+      const stats = [
         "Time: " + context.runtime + "ms",
         "Total: " + context.total,
         "Passed: " + context.passed,
@@ -105,6 +117,7 @@ const spawn = require('child_process').spawn;
       console.log(stats.join(", "));
 
       browser.close();
+      proc.kill('SIGINT');
       if (context.failed > 0){
         process.exit(1);
       }else{
@@ -115,16 +128,18 @@ const spawn = require('child_process').spawn;
     await page.goto(targetURL);
 
     await page.evaluate(() => {
-      QUnit.config.testTimeout = 10000;
+      QUnit.config.autostart = false;
+      QUnit.config.testTimeout = 5000;
 
       // Cannot pass the window.harness_blah methods directly, because they are
       // automatically defined as async methods, which QUnit does not support
+      QUnit.moduleStart((context) => { window.harness_moduleStart(context); });
       QUnit.moduleDone((context) => { window.harness_moduleDone(context); });
       QUnit.testDone((context) => { window.harness_testDone(context); });
       QUnit.log((context) => { window.harness_log(context); });
       QUnit.done((context) => { window.harness_done(context); });
 
-      console.log("\nRunning: " + JSON.stringify(QUnit.urlParams) + "\n");
+      QUnit.start();
     });
 
     function wait(ms) {
