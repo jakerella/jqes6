@@ -183,7 +183,7 @@
     }
     Collection.prototype.prop = Collection.prototype.attr;
 
-    function select(selector, context = document) {
+    function select(selector = '', context = document) {
         let selection;
 
         if (typeof(context) === 'string') {
