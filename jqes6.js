@@ -188,7 +188,7 @@
 
         if (typeof(context) === 'string') {
             return select(context).find(selector);
-        } else if (!context.querySelectorAll) {
+        } else if (!context || !context.querySelectorAll) {
             context = document;
         }
 
@@ -205,7 +205,7 @@
                     selection = [];
                 }
             }
-        } else if (selector.tagName) {
+        } else if (selector && selector.tagName) {
             selection = [selector];
         } else {
             try { selection = [...selector]; } catch (err) { /* don't care here... leave it empty */ }
