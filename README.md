@@ -58,6 +58,8 @@ Only supports content as an HTML String or Node
 Does not support passing a `function` as the value.
 * `.prop()`  
 In this library, `.prop()` is just an alias for `.attr()`. That is not true in jQuery itself, but it mostly has to do with manipulating forms, so I'm letting it go for now.
+* `$.ajax(url, [settings])` https://api.jquery.com/jQuery.ajax/  
+This is a pass-through to the new [fetch API](https://developer.mozilla.org/en-US/docs/Web/API/Fetch_API/Using_Fetch) with a little trimmings to allow it to look like jQuery a bit more. For example, it uses straight up [Promises](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise), no weird jQuery "done"/"fail"/"then"/"always"/etc methods. But it will accept `data` whereas fetch only accepts `body` (a throwback for you). That said, don't be fooled, very little of this implementation actually resembles jQuery's `ajax()` method! **Use cautiously** and do not assume similarities to jQuery!
 
 ## Author and LICENSE
 

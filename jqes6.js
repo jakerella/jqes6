@@ -215,4 +215,53 @@
 
     window.$ = select;
 
+    window.$.ajax = function jqFetch(url, settings = {}) {
+        if (typeof(url) === 'object') {
+            settings = url;
+            url = settings.url;
+        }
+
+        if (settings.type && !settings.method) {
+            settings.method = settings.type;
+        }
+        if (settings.data && !settings.body) {
+            if (typeof(settings.data) === 'object') {
+                settings.body = JSON.stringify(settings.data);
+            } else {
+                settings.body = settings.data;
+            }
+        }
+
+        return new Promise((resolve, reject) => {
+            let res = null;
+            window.fetch(url, settings)
+                .then(response => {
+                    res = response;
+                    if (response.status > 399) {
+                        reject(response, 'error', new Error(`${response.status} ${response.statusText}`));
+                    } else if (/\/json( |;|$)/.test(response.headers.get('content-type'))) {
+                        return response.json();
+                    } else if (/^image/.test(response.headers.get('content-type'))) {
+                        return response.blob();
+                    } else {
+                        return response.text();
+                    }
+                })
+                .then(content => {
+                    if (content instanceof Blob) {
+                        try {
+                            resolve(URL.createObjectURL(content), 'success', res);
+                        } catch (error) {
+                            reject(res, 'error', error);
+                        }
+                    } else {
+                        resolve(content, 'success', res);
+                    }
+                })
+                .catch(error => {
+                    reject(res, 'error', error);
+                });
+        });
+    };
+
 }());
