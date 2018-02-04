@@ -25,7 +25,7 @@ class Collection extends Array {
     find(selector) {
         let children = [];
         this.forEach((node) => {
-            children = [...children, ...select(selector, node)];
+            children.push(...select(selector, node));
         });
         return new Collection(children);
     }
