@@ -182,7 +182,7 @@ class Collection extends Array {
 }
 Collection.prototype.prop = Collection.prototype.attr;
 
-const $ = function select(selector = '', context = document) {
+function select(selector = '', context = document) {
     let selection;
 
     if (typeof(context) === 'string') {
@@ -212,7 +212,7 @@ const $ = function select(selector = '', context = document) {
     return new Collection(selection);
 }
 
-$.ajax = function jqFetch(url, settings = {}) {
+select.ajax = function jqFetch(url, settings = {}) {
     if (typeof(url) === 'object') {
         settings = url;
         url = settings.url;
@@ -261,4 +261,4 @@ $.ajax = function jqFetch(url, settings = {}) {
     });
 };
 
-export default $;
+export default select;
