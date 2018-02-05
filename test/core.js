@@ -85,4 +85,12 @@ q.module('Select function', function(hooks) {
         assert.strictEqual(results.length, 0, 'result length is zero');
     });
 
+    q.test('selecting children with find works', function(assert) {
+        const results = $('article').find('ul');
+        assert.strictEqual(typeof(results), 'object', 'result is an object');
+        assert.strictEqual(results.__proto__.constructor.name, 'Collection', 'result is a Collection');
+        assert.strictEqual(results.length, 1, 'result length is correct');
+        assert.strictEqual(results[0].tagName, 'UL', 'result tagName is correct');
+    })
+
 });
