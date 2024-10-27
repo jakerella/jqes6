@@ -28,6 +28,9 @@ These are the supported methods. Instead of re-documenting jQuery, I simply link
 * `$(selector [, context])` https://api.jquery.com/jQuery/  
 Note that the first argument supports: String selector, Node, NodeList, Array<Node>, or String HTML. The second argument only supports String selector or an HTML Node.
 * `.find(selector)` https://api.jquery.com/find/
+* `.is(selector)` https://api.jquery.com/is/  
+Note that this version only accepts a CSS selector
+* `.parents(selector)` https://api.jquery.com/parents/
 * `.hide()` https://api.jquery.com/hide/  
 Note that this version of `hide` takes no arguments, unlike jQuery proper, there is no animation. If you want animation use CSS!
 * `.show()` https://api.jquery.com/show/  
@@ -40,10 +43,11 @@ Does not support a `function` as the argument, but does support multiple classes
 Does not support a `function` as the argument, but does support multiple classes.
 * `.toggleClass(className [, state])` https://api.jquery.com/toggleClass/  
 Does not support a `function` as the first argument, but does support multiple classes.
-* `.on(event [, selector], function)` https://api.jquery.com/on/  
+* `.on(eventType [, selector], function)` https://api.jquery.com/on/  
 Only supports a single `event` type and no data, but does handle simple delegation.
-* `.off(event)` https://api.jquery.com/off/  
+* `.off(eventType)` https://api.jquery.com/off/  
 Very simple, only handles removing a single event handler by event name.
+* `.trigger(eventType)` https://api.jquery.com/trigger/
 * `.html([content])` https://api.jquery.com/html/  
 Does not support passing in a function
 * `.text([content])` https://api.jquery.com/text/  

@@ -30,6 +30,42 @@ class Collection extends Array {
         return new Collection(children);
     }
 
+    is(selector) {
+        if (!this.length) { return false; }
+
+        let allMatch = true;
+        this.forEach((node) => {
+            try {
+                if (!node.matches(selector)) { allMatch = false; }
+            } catch(_) {
+                allMatch = false;
+            }
+        });
+        return allMatch;
+    }
+
+    parents(selector = null) {
+        const parents = [];
+        this.forEach((node) => {
+            let count = 0
+            let parent = node.parentNode;
+            while(parent) {
+                if (++count > 99) { break; }
+                if (selector) {
+                    try {
+                        if (!parent.matches(selector)) {
+                            parent = parent.parentNode
+                            continue;
+                        }
+                    } catch(_) { break; /* bad selector */ }
+                }
+                parents.push(parent);
+                parent = parent.parentNode;
+            }
+        });
+        return new Collection(parents);
+    }
+
     hide() {
         this.toggle('hide');
     }
@@ -96,13 +132,22 @@ class Collection extends Array {
         });
         return this;
     }
+
     off(evtName) {
         this.forEach((node) => node.removeEventListener(evtName, node[`${evtName}_handler`]));
         return this;
     }
 
+    trigger(evtName, options) {
+        const event = new Event(evtName, { bubbles: true, cancelable: true, ...(options || {}) });
+        this.forEach((node) => {
+            node.dispatchEvent(event);
+        });
+        return this
+    }
+
     html(content) {
-        if (!content) { return this.map((node) => node.innerHTML).join(''); }
+        if (content === null || content === undefined) { return this.map((node) => node.innerHTML).join(''); }
 
         let html = content;
         if (content.tagName) { html = content.outerHTML; }
@@ -113,7 +158,7 @@ class Collection extends Array {
     }
 
     text(content) {
-        if (!content) { return this.map((node) => node.innerText).join(''); }
+        if (content === null || content === undefined) { return this.map((node) => node.innerText).join(''); }
 
         let text = content;
         if (content.tagName) { text = content.innerText; }
