@@ -125,7 +125,7 @@ class Collection extends Array {
         }
         this.forEach((node) => {
             node[`${evtName}_handler`] = function(evt) {
-                if (target && !evt.target.matches(target)) { return evt.preventDefault(); }
+                if (target && !evt.target.matches(target)) { return; }
                 fn.apply( (target) ? evt.target : node, [...arguments] );
             };
             node.addEventListener(evtName, node[`${evtName}_handler`]);
@@ -169,10 +169,16 @@ class Collection extends Array {
     }
 
     append(content) {
-        let html = content;
-        if (content.tagName) { html = content.outerHTML; }
         this.forEach((node) => {
-            node.innerHTML += html;
+            if (content.tagName) {
+                node.appendChild(content);
+            } else {
+                let temp = document.createElement('div');
+                temp.innerHTML = content;
+                const children = [...temp.children];
+                temp = null;
+                children.forEach((c) => { node.appendChild(c); })
+            }
         });
         return this;
     }

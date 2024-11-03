@@ -1,6 +1,6 @@
 {
   "name": "jqes6",
-  "version": "0.3.0",
+  "version": "0.3.1",
   "description": "A lightweight version of some of the core functionality provided by jQuery rewritten in pure ES5/6.",
   "main": "jqes6.js",
   "scripts": {
